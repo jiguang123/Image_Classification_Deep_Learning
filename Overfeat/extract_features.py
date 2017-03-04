@@ -44,8 +44,8 @@ for start in xrange(0,len(imagePaths), batch_size):
 
     #read and resize the images
     images = [cv2.imread(impath) for impath in imagePaths[start:end]]
+    images = [cv2.cvtColor(image, cv2.COLOR_BGR2RGB) for image in images]
     images = np.array([cv2.resize(image, tuple(config["image_size"])) for image in images], dtype="float")
-
     #dump the image ID and features to the hdf5 database
     imageIDDB[start:end] = [":".join(impath.split("/")[-2:]) for impath in imagePaths[start:end]]
     features = overfeat.transform(np.array(images))

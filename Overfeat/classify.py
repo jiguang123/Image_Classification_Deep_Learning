@@ -4,6 +4,7 @@ import cPickle
 import cv2
 from sklearn_theano.feature_extraction import OverfeatTransformer
 
+#parse a single command-line argument to take a json configuration file
 ap = argparse.ArgumentParser()
 ap.add_argument("-c", "--conf", required=True, help="path to configuration file...")
 ap.add_argument("-i", "--image", help="path to test image...")

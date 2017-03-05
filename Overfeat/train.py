@@ -7,6 +7,7 @@ import argparse
 import json
 import cPickle
 
+#parse a single command-line argument to take a json configuration file
 ap = argparse.ArgumentParser()
 ap.add_argument("-c", "--conf", required=True, help="path to configuration file...")
 args = vars(ap.parse_args())
@@ -16,10 +17,12 @@ config = json.load(open(args["conf"]))
 db = h5py.File(config["features_path"], mode="r")
 le = cPickle.load(open(config["label_encoder_path"]))
 
+#split the training and testing datasets
 split = int(db["image_ids"].shape[0]*config["training_size"])
 (trainData, trainLabels) = (db["features"][:split], db["image_ids"][:split])
 (testData, testLabels) = (db["features"][split:], db["image_ids"][split:])
 
+#encode the training and testing labels
 trainLabels = np.array([le.transform([l.split(":")[0]]) for l in trainLabels])
 testLabels = np.array([le.transform([l.split(":")[0]]) for l in testLabels])
 
@@ -28,6 +31,9 @@ model = LogisticRegression(C=0.1)
 model.fit(trainData, trainLabels.flatten())
 
 print("[INFO] evaluating model...")
+
+# Rank 1: If the actual target is equal to the top predicted class
+# Rank 5: If the actual target is in top five predicted classes
 
 rank1, rank5 = 0, 0
 for (label, features) in zip(testLabels, testData):
@@ -43,6 +49,7 @@ for (label, features) in zip(testLabels, testData):
 rank1 = (rank1/float(len(testLabels)))*100
 rank5 = (rank5/float(len(testLabels)))*100
 
+#predict the testing data
 predictions = model.predict(testData)
 
 print("Rank 1:", rank1)

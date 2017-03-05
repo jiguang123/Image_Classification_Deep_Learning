@@ -1,5 +1,5 @@
 # Image Classification with Deep Learning
-This script is created to support the video session at 
+This script is created to support the video session at https://www.youtube.com/watch?v=DS4WE3DAu-k
 
 ### Links
 MNIST datasets: https://pjreddie.com/projects/mnist-in-csv/
@@ -18,5 +18,3 @@ Test model:
 
 Classify new images
 `python classify.py --conf <path_to_configuration_json_file> --image <path_to_image>`
-
-

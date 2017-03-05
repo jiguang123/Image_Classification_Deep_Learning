@@ -11,6 +11,7 @@ import random
 import json
 import cv2
 
+#parse a single command-line argument to take a json configuration file
 ap = argparse.ArgumentParser()
 ap.add_argument("-c", "--conf", required=True, help="path to configuration file...")
 args = vars(ap.parse_args())
@@ -19,6 +20,7 @@ print("[INFO] loading configurations...")
 config = json.loads(open(args["conf"]).read())
 imagePaths = list(list_images(config["dataset"]))
 
+#get the no.of.output nodes at a layer
 output_size = SMALL_NETWORK_FILTER_SHAPES[config["layer_num"]][0]
 batch_size = config["batch_size"]
 
@@ -27,6 +29,7 @@ db = h5py.File(config["features_path"], mode="w")
 imageIDDB = db.create_dataset("image_ids",shape=(len(imagePaths),), dtype=h5py.special_dtype(vlen=unicode))
 featuresDB = db.create_dataset("features", shape=(len(imagePaths), output_size), dtype="float")
 
+#just to reproduce the results
 random.seed(42)
 random.shuffle(imagePaths)
 

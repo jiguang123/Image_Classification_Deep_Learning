@@ -6,6 +6,7 @@ import cPickle
 import h5py
 import cv2
 
+#parse a single command-line argument to take a json configuration file
 ap = argparse.ArgumentParser()
 ap.add_argument("-c", "--conf", required=True, help="path to configuration file...")
 args = vars(ap.parse_args())
@@ -20,6 +21,7 @@ db = h5py.File(config["features_path"])
 split = int(db["image_ids"].shape[0] * config["training_size"])
 (testData, testLabels) = (db["features"][split:],db["image_ids"][split:])
 
+#choose 10 random images from the testing set and predict the labels
 for i in np.random.choice(np.arange(0, len(testData)),size=(10,)):
     (trueLabel, filename) = testLabels[i].split(":")
     vector = testData[i]
